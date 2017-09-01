@@ -1,6 +1,8 @@
 import sys
 import spotipy
 import spotipy.util as util
+from gmusicapi import Mobileclient
+import tokens
 
 scope = 'user-library-read'
 
@@ -19,6 +21,17 @@ if token:
     while results['next']:
         results = sp.next(results)
         tracks.extend(results['items'])
-    print(len(tracks))
 else:
     print "Can't get token for", username
+
+print "Found {} tracks for user '{}' on Spotify".format(len(tracks), username)
+
+if tracks:
+    gmusic = Mobileclient()
+    logged_in = gmusic.login(tokens.GMUSIC_USER, tokens.GMUSIC_PWD, Mobileclient.FROM_MAC_ADDRESS, 'en_US')
+    if (logged_in):
+        
+    else:
+        print("Could not log in to '{}'".format(tokens.GMUSIC_USER))
+else:
+    print('no tracks to transfer')
