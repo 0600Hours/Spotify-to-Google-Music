@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 tokens.py
+*.cache
 
 # C extensions
 *.so
