@@ -9,13 +9,9 @@ sys.setdefaultencoding('utf-8')
 
 scope = 'user-library-read'
 
-if len(sys.argv) > 1:
-    username = sys.argv[1]
-else:
-    print "Usage: %s username" % (sys.argv[0],)
-    sys.exit()
+username = tokens.SP_USER
 
-token = util.prompt_for_user_token(username, scope)
+token = util.prompt_for_user_token(username, scope, tokens.SP_CLIENT_ID, tokens.SP_CLIENT_SECRET, tokens.SP_REDIRECT_URI)
 
 if token:
     sp = spotipy.Spotify(auth=token)
@@ -55,13 +51,17 @@ if sp_tracks:
                     break
                 else:
                     print "    No results for '{}'".format(search_term)
-                    missing_tracks.append(search_terms[0])
                     
-
             if gm_track:
                 print "out: {} - {} - {}".format(gm_track['title'], gm_track['artist'], gm_track['album'])
+                gmusic.add_store_track(gm_track['storeId'])
             else:
                 print "out: No results found"
+                missing_tracks.append(search_terms[0])
+
+        print "Unable to add {} tracks.".format(len(missing_tracks))
+        for track_info in missing_tracks:
+            print track_info
     else:
         print("Could not log in to '{}'".format(tokens.GMUSIC_USER))
 else:
